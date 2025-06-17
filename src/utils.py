@@ -17,6 +17,6 @@ def load_data(): # function for reading data from walks.json
     with open(DATAPATH, "r") as file:
         return json.load(file) # return the read data
     
-def sava_data(data): # function for writing data to the walks.json file
+def save_data(data): # function for writing data to the walks.json file
     with open(DATAPATH, "w") as file:
         json.dump(data, file, indent=2) # writing the data, with an indent of 2 for readability
