@@ -42,7 +42,18 @@ def show_totals():
     print(f"Total elevation gain (in meters): {df['elevGain'].sum()}")
 
 def show_stats():
-    pass
+    data = load_data()
+    if not data:
+        print("No data available.")
+        return
+    date = input("Enter the date to view stats for [YYYY-MM-DD]: ").strip()
+    df = pd.DataFrame(data)
+    day_stats = df[df['date'] == date]
+    if day_stats.empty:
+        print(f"No data found for {date}.")
+    else:
+        print(f"\n---------- Stats for {date}: ----------")
+        print(day_stats.to_string(index=False))
     
 def show_averages():
     pass
