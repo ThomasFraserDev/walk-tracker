@@ -52,15 +52,91 @@ def show_stats():
     if day_stats.empty:
         print(f"No data found for {date}.")
     else:
+        row = day_stats.iloc[0]
         print(f"\n---------- Stats for {date}: ----------")
-        print(day_stats.to_string(index=False))
+        print(f"Steps: {row['steps']}")
+        print(f"Distance (in km): {row['distanceKm']}")
+        print(f"Time (in minutes): {row['timeMins']}")
+        print(f"Elevation gain (in meters): {row['elevGain']}")
+        print(f"Average heart rate (bpm): {row['heartRate']}")
+        print(f"Pace (min/km): {row['paceKm']}")
+        print(f"Step length (m): {row['stepLenM']}")
     
 def show_averages():
-    pass
+    data = load_data()
+    if not data:
+        print("No data available.")
+        return
 
+    print("Enter a date range for averages or leave blank for all time.")
+    start = input("Start date [YYYY-MM-DD] (leave blank for earliest): ").strip()
+    end = input("End date [YYYY-MM-DD] (leave blank for latest): ").strip()
+
+    df = pd.DataFrame(data)
+    df['date'] = pd.to_datetime(df['date'])
+
+    if start:
+        df = df[df['date'] >= pd.to_datetime(start)]
+    if end:
+        df = df[df['date'] <= pd.to_datetime(end)]
+
+    if df.empty:
+        print("No data in the specified range.")
+        return
+
+    print("\n---------- Averages ----------")
+    print(f"Average steps: {df['steps'].mean():.2f}")
+    print(f"Average distance (in km): {df['distanceKm'].mean():.2f}")
+    print(f"Average time (in minutes): {df['timeMins'].mean():.2f}")
+    print(f"Average elevation gain (in meters): {df['elevGain'].mean():.2f}")
+    print(f"Average heart rate (bpm): {df['heartRate'].mean():.2f}")
+    print(f"Average pace (min/km): {df['paceKm'].mean():.2f}")
+    print(f"Average step length (m): {df['stepLenM'].mean():.2f}")
+    
 def show_comparison():
-    pass
+    data = load_data()
+    if not data:
+        print("No data available.")
+        return
 
+    print("Enter two date ranges to compare.")
+    start1 = input("First range start [YYYY-MM-DD] (blank for earliest): ").strip()
+    end1 = input("First range end [YYYY-MM-DD] (blank for latest): ").strip()
+    start2 = input("Second range start [YYYY-MM-DD] (blank for earliest): ").strip()
+    end2 = input("Second range end [YYYY-MM-DD] (blank for latest): ").strip()
+
+    df = pd.DataFrame(data)
+    df['date'] = pd.to_datetime(df['date'])
+
+    df1 = df.copy()
+    if start1:
+        df1 = df1[df1['date'] >= pd.to_datetime(start1)]
+    if end1:
+        df1 = df1[df1['date'] <= pd.to_datetime(end1)]
+
+    df2 = df.copy()
+    if start2:
+        df2 = df2[df2['date'] >= pd.to_datetime(start2)]
+    if end2:
+        df2 = df2[df2['date'] <= pd.to_datetime(end2)]
+
+    if df1.empty or df2.empty:
+        print("No data in one or both ranges.")
+        return
+
+    stats = ['steps', 'distanceKm', 'timeMins', 'elevGain', 'heartRate', 'paceKm', 'stepLenM']
+    print("\nStat              | Range 1   | Range 2   | Diff")
+    print("-" * 50)
+    for stat in stats:
+        if stat in ["heartRate", "paceKm", "stepLenM"]:
+            t1 = round(df1[stat].mean(), 2)
+            t2 = round(df2[stat].mean(), 2)
+        else:
+            t1 = df1[stat].sum()
+            t2 = df2[stat].sum()
+        diff = abs(t1 - t2)
+        print(f"{stat:<17} {t1:>9.2f} {t2:>9.2f} {diff:>9.2f}")
+    
 def plot_trend():
     pass
     
