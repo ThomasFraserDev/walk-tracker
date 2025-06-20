@@ -138,11 +138,23 @@ def show_comparison():
         print(f"{stat:<17} {t1:>9.2f} {t2:>9.2f} {diff:>9.2f}")
     
 def plot_trend():
-    pass
+    data = load_data()
+    if not data:
+        print("No data available.")
+        return
+    df = pd.DataFrame(data)
+    df['date'] = pd.to_datetime(df['date'])
+    df.sort_values('date', inplace=True)
+    df.set_index('date', inplace=True)
+    df['steps'].plot(title="Steps Over Time", figsize=(10,5))
+    plt.ylabel("Steps")
+    plt.xlabel("Date")
+    plt.tight_layout()
+    plt.show()
     
 def main():
     while True:
-        print("Choose an option:\n[1] Add an entry\n[2] Show your total stats\n[3] Show your stats from a specific day\n[4] Show your averages across a timeframe\n[5] Show a comparison between stats\n[6] Plot a trend of a specified stat\n[7] Quit")
+        print("Choose an option:\n[1] Add an entry\n[2] Show your total stats\n[3] Show your stats from a specific day\n[4] Show your averages across a timeframe\n[5] Show a comparison between stats\n[6] Plot a trend of your steps\n[7] Quit")
         choice = input()
         if choice == "1":
             add_entry()
