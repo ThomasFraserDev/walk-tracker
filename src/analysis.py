@@ -34,6 +34,9 @@ def show_stats(): # Function that shows stats for a specified date
             print(f"    Distance (in km): {row['distanceKm']:.2f}")
             print(f"    Time (in minutes): {row['timeMins']:.2f}")
             print(f"    Elevation gain (in meters): {row['elevGain']:.2f}")
+            print(f"    Temperature: {row['temperature']}")
+            print(f"    Weather: {row['weather']}")
+            print(f"    Time of day: {row['timeOfDay']}")
             print(f"    Average heart rate (bpm): {row['heartRate']:.2f}")
             print(f"    Pace (min/km): {row['paceKm']:.2f}")
             print(f"    Step length (m): {row['stepLenM']:.2f}")
@@ -68,6 +71,9 @@ def show_averages(): # Function that shows the average stats across a date range
     print(f"Average heart rate (bpm): {df['heartRate'].mean():.2f}")
     print(f"Average pace (min/km): {df['paceKm'].mean():.2f}")
     print(f"Average step length (m): {df['stepLenM'].mean():.2f}")
+    print(f"Most common temperature: {df['temperature'].mode()[0] if not df['temperature'].mode().empty else 'N/A'}")
+    print(f"Most common weather: {df['weather'].mode()[0] if not df['weather'].mode().empty else 'N/A'}")
+    print(f"Most common time of day: {df['timeOfDay'].mode()[0] if not df['timeOfDay'].mode().empty else 'N/A'}")
 
 def show_comparison(): # Function that compares walk data across two date ranges
     data = load_data()
@@ -108,3 +114,11 @@ def show_comparison(): # Function that compares walk data across two date ranges
         t2 = df2[stat].sum()
         diff = t1 - t2
         print(f"{stat:<17} {t1:>9.2f} {t2:>9.2f} {diff:>9.2f}")
+    
+    print("\nCategorical Stats:")
+    print(f"\nRange 1 - Most common temperature: {df1['temperature'].mode()[0] if not df1['temperature'].mode().empty else 'N/A'}")
+    print(f"Range 1 - Most common weather: {df1['weather'].mode()[0] if not df1['weather'].mode().empty else 'N/A'}")
+    print(f"Range 1 - Most common time of day: {df1['timeOfDay'].mode()[0] if not df1['timeOfDay'].mode().empty else 'N/A'}")
+    print(f"\nRange 2 - Most common temperature: {df2['temperature'].mode()[0] if not df2['temperature'].mode().empty else 'N/A'}")
+    print(f"Range 2 - Most common weather: {df2['weather'].mode()[0] if not df2['weather'].mode().empty else 'N/A'}")
+    print(f"Range 2 - Most common time of day: {df2['timeOfDay'].mode()[0] if not df2['timeOfDay'].mode().empty else 'N/A'}")
