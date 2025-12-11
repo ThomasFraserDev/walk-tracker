@@ -14,6 +14,25 @@ def show_totals(): # Function that shows total stats
     print(f"Total distance (in km): {df['distanceKm'].sum():.2f}")
     print(f"Total time (in minutes): {df['timeMins'].sum():.2f}")
     print(f"Total elevation gain (in meters): {df['elevGain'].sum():.2f}")
+    
+    temp_counts = df['temperature'].value_counts() # Get sums of walks in each temperature
+    weather_counts = df['weather'].value_counts() # Get sums of walks in each weather
+    time_counts = df['timeOfDay'].value_counts() # Get sums of walks in each time of day
+
+    print(f"Total hot walks: {temp_counts.get('hot', 0)}")
+    print(f"Total warm walks: {temp_counts.get('warm', 0)}")
+    print(f"Total cold walks: {temp_counts.get('cold', 0)}")
+
+    print(f"Total sunny walks: {weather_counts.get('sunny', 0)}")
+    print(f"Total rainy walks: {weather_counts.get('raining', 0)}")
+    print(f"Total snowy walks: {weather_counts.get('snowing', 0)}")
+    print(f"Total cloudy walks: {weather_counts.get('cloudy', 0)}")
+    print(f"Total windy walks: {weather_counts.get('windy', 0)}")
+
+    print(f"Total morning walks: {time_counts.get('morning', 0)}")
+    print(f"Total afternoon walks: {time_counts.get('afternoon', 0)}")
+    print(f"Total evening walks: {time_counts.get('evening', 0)}")
+    print(f"Total night walks: {time_counts.get('night', 0)}")
 
 def show_stats(): # Function that shows stats for a specified date
     data = load_data()
@@ -122,3 +141,15 @@ def show_comparison(): # Function that compares walk data across two date ranges
     print(f"\nRange 2 - Most common temperature: {df2['temperature'].mode()[0] if not df2['temperature'].mode().empty else 'N/A'}")
     print(f"Range 2 - Most common weather: {df2['weather'].mode()[0] if not df2['weather'].mode().empty else 'N/A'}")
     print(f"Range 2 - Most common time of day: {df2['timeOfDay'].mode()[0] if not df2['timeOfDay'].mode().empty else 'N/A'}")
+    
+def show_maxes():
+    data = load_data()
+    if not data:
+        print("No data available.")
+        return
+    df = pd.DataFrame(data)
+    print("\n---------- Max Stats ----------")
+    print(f"Most steps on a walk: {max(df["steps"])}")
+    print(f"Longest walk (km): {max(df["distanceKm"])}")
+    print(f"Longest walk (minutes): {max(df["timeMins"])}")
+    print(f"Highest elevation gain on a walk (m): {max(df["elevGain"])}")

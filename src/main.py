@@ -1,5 +1,5 @@
 from tracker import add_entry
-from analysis import show_totals, show_stats, show_averages, show_comparison
+from analysis import show_totals, show_stats, show_averages, show_comparison, show_maxes
 from visualization import plot_trend
 
 def main():
@@ -10,7 +10,8 @@ def main():
         "4": ("Show your averages across a timeframe", show_averages),
         "5": ("Show a comparison between stats", show_comparison),
         "6": ("Plot a trend of a specified stat", plot_trend),
-        "7": ("Quit", None)
+        "7": ("Show your max stats", show_maxes),
+        "8": ("Quit", None)
     }
     
     while True:
