@@ -153,3 +153,5 @@ def show_maxes():
     print(f"Longest walk (km): {max(df["distanceKm"])}")
     print(f"Longest walk (minutes): {max(df["timeMins"])}")
     print(f"Highest elevation gain on a walk (m): {max(df["elevGain"])}")
+    print(f"Highest average heart rate (bpm): {max(df["heartRate"])}")
+    print(f"Fastest pace (minutes per km): {min(df["pace"])}")

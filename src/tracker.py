@@ -8,15 +8,17 @@ WEATHER_CHOICES = {"sunny", "raining", "snowing", "cloudy", "windy"}
 TIME_CHOICES = {"morning", "afternoon", "evening", "night"}
 
 def add_entry():
+    data = load_data()
     try:
-        date = input("Enter the date of the walk [YYYY-MM-DD]:").strip()
-        steps = int(input("Enter your number of steps:"))
-        distance = float(input("Enter the distance you walked (in km):"))
+        id = max([entry.get("id", 0) for entry in data], default=0) + 1 # Set a walk's id to be the current highest id + 1
+        date = input("Enter the date of the walk [YYYY-MM-DD]: ").strip()
+        steps = int(input("Enter your number of steps: "))
+        distance = float(input("Enter the distance you walked (in km): "))
         time = float(input("Enter the length of your walk (in minutes): "))
-        elevGain = float(input("Enter the elevation gain of your walk (in meters):"))
-        temp = str(input("What was the temperature like on your walk? [ hot | warm | cold ]")).strip()
-        weather = str(input("What was the weather like on your walk? [ sunny | raining | snowing | cloudy | windy ]")).strip()
-        timeOfDay = str(input("What time of day was your walk at? [ morning | afternoon | evening | night ]")).strip()
+        elevGain = float(input("Enter the elevation gain of your walk (in meters): "))
+        temp = str(input("What was the temperature like on your walk? [ hot | warm | cold ]: ")).strip()
+        weather = str(input("What was the weather like on your walk? [ sunny | raining | snowing | cloudy | windy ]: ")).strip()
+        timeOfDay = str(input("What time of day was your walk at? [ morning | afternoon | evening | night ]: ")).strip()
         
         if temp not in TEMP_CHOICES:
             print("Invalid temperature. Choose one of: hot, warm, cold.")
@@ -49,6 +51,7 @@ def add_entry():
         
         data = load_data()
         data.append({ # Add the entries to the dataset
+            "id": id,
             "date": date,
             "steps": steps,
             "distanceKm": distance,
@@ -68,6 +71,116 @@ def add_entry():
     except ValueError:
         print("Please enter valid numeric or textual values.")
         
+def delete_entry():
+    data = load_data()
+    removal_id = int(input("Enter the ID of the walk you wish to be deleted: "))
+    removal_entry = None
+    
+    for entry in data:
+        if entry.get("id") == removal_id: # Find the walk with the inputted ID
+            removal_entry = entry
+            break
+        
+    if removal_entry is None:
+        print("A walk with the entered ID doesn't exist.")
+        return
+    
+    data.remove(removal_entry) # Delete the walk
+    save_data(data)
+    print(f"Walk with ID {removal_id} has been deleted.")
+    
+def edit_entry():
+    data = load_data()
+    edit_id = int(input("Enter the ID of the walk you wish to edit: "))
+    edit_entry = None
+    
+    for entry in data:
+        if entry.get("id") == edit_id: # Find the walk with the inputted ID
+            edit_entry = entry
+            break
+        
+    if edit_entry is None:
+        print("A walk with the entered ID doesn't exist.")
+        return
+    
+    valid_stats = ['steps', 'distanceKm', 'timeMins', 'elevGain', 'heartRate', 'temperature', 'weather', 'timeOfDay']
+    edit_stat = input("Enter the stat you wish to edit [steps, distanceKM, timeMins, heartRate, temperature, weather, timeOfDay]: ")
+    
+    if edit_stat not in valid_stats:
+        print(f"Invalid stat. Choose from {valid_stats}")
+        return
+    
+    new_value = input(f"Enter the new value for {edit_stat}: ").strip()
+
+    # Validate the entered new value
+    if edit_stat == 'temperature':
+        if new_value not in TEMP_CHOICES:
+            print(f"Invalid temperature. Choose from {TEMP_CHOICES}")
+            return
+    elif edit_stat == 'weather':
+        if new_value not in WEATHER_CHOICES:
+            print(f"Invalid weather. Choose from {WEATHER_CHOICES}")
+            return
+    elif edit_stat == 'timeOfDay':
+        if new_value not in TIME_CHOICES:
+            print(f"Invalid time of day. Choose from {TIME_CHOICES}")
+            return
+    else:
+        try:
+            new_value = float(new_value) if edit_stat != 'steps' else int(new_value)
+        except ValueError:
+            print(f"Invalid value for {edit_stat}.")
+            return
+        
+    edit_entry[edit_stat] = new_value # Edit the value
+    save_data(data)
+    print(f"Walk ID {edit_id} has been updated.")
+    
+def walk_by_id():
+    data = load_data()
+    walk_id = int(input("Enter the ID of the walk you wish to show: "))
+    walk = None
+    
+    for entry in data:
+        if entry.get("id") == walk_id: # Find the walk with the inputted ID
+            walk = entry
+            break
+        
+    if walk is None:
+        print("A walk with the entered ID doesn't exist.")
+        return
+    
+    print("\n---------- Walk Details ----------")
+    print(f"ID: {walk.get('id', '-')}")
+    print(f"Date: {walk.get('date', '-')}")
+    print(f"Steps: {walk.get('steps', 0)}")
+    print(f"Distance (km): {walk.get('distanceKm', 0):.2f}")
+    print(f"Time (mins): {walk.get('timeMins', 0):.2f}")
+    print(f"Elevation Gain (m): {walk.get('elevGain', 0):.2f}")
+    print(f"Temperature: {walk.get('temperature', '-')}")
+    print(f"Weather: {walk.get('weather', '-')}")
+    print(f"Time of Day: {walk.get('timeOfDay', '-')}")
+    print(f"Heart Rate (bpm): {walk.get('heartRate', 0):.1f}")
+    print(f"Pace (min/km): {walk.get('paceKm', 0):.2f}")
+    print(f"Step Length (m): {walk.get('stepLenM', 0):.2f}")
+    
+def walks_by_id():
+    data = load_data()
+    if not data:
+        print("No walks to show.")
+        return
+        
+    data_sorted = sorted(data, key=lambda x: x.get("id", 0))
+
+    print("\n---------- Walks ----------")
+    print(f"{'ID':<6} {'Date':<12} {'Distance (km)':>14}")
+    print("-" * 34)
+    for entry in data_sorted:
+        walk_id = entry.get("id", "-")
+        date = entry.get("date", "-")
+        distance = entry.get("distanceKm", 0)
+        print(f"{walk_id:<6} {date:<12} {distance:>14.2f}")
+
 def estimate_heartRate(steps, distance, time, elevGain, temp, weather, timeOfDay):
     data = load_data()
     

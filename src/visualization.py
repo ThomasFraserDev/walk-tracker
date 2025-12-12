@@ -9,7 +9,7 @@ def plot_trend():
         return
     
     valid_stats = ['steps', 'distanceKm', 'timeMins', 'elevGain', 'heartRate', 'paceKm', 'stepLenM']
-    stat = input("Enter the stat to plot (steps, distanceKm, timeMins, elevGain, heartRate, paceKm, stepLenM): ").strip()
+    stat = input("Enter the stat to plot [steps, distanceKm, timeMins, elevGain, heartRate, paceKm, stepLenM]: ").strip()
     
     if stat not in valid_stats: # If entered stat isn't valid
         print(f"Invalid stat. Choose from {valid_stats}")
