@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils import load_data
+from data import load_data
+from constants import NUMERIC_STATS
 
 def plot_trend():
     data = load_data()
@@ -8,11 +9,10 @@ def plot_trend():
         print("No data available.")
         return
     
-    valid_stats = ['steps', 'distanceKm', 'timeMins', 'elevGain', 'heartRate', 'paceKm', 'stepLenM']
-    stat = input("Enter the stat to plot [steps, distanceKm, timeMins, elevGain, heartRate, paceKm, stepLenM]: ").strip()
+    stat = input(f"Enter the stat to plot {NUMERIC_STATS}: ").strip()
     
-    if stat not in valid_stats: # If entered stat isn't valid
-        print(f"Invalid stat. Choose from {valid_stats}")
+    if stat not in NUMERIC_STATS: # If entered stat isn't valid
+        print(f"Invalid stat. Choose from {NUMERIC_STATS}")
         return
     
     df = pd.DataFrame(data)
