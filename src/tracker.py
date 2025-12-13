@@ -1,3 +1,5 @@
+from rich.console import Console
+from rich.table import Table
 from data import load_data, save_data
 from prediction import estimate_heartRate
 from constants import TEMP_CHOICES, WEATHER_CHOICES, TIME_CHOICES, EDITABLE_FIELDS
@@ -216,11 +218,19 @@ def walks_by_id():
         
     data_sorted = sorted(data, key=lambda x: x.get("id", 0))
 
-    print("\n---------- Walks ----------")
-    print(f"{'ID':<6} {'Date':<12} {'Distance (km)':>14}")
-    print("-" * 34)
+    table = Table(title="Walks", show_lines=True)
+    table.add_column("ID", style="bright_cyan", justify="center")
+    table.add_column("Date", style="bright_magenta")
+    table.add_column("Distance (km)", justify="right", style="bright_green")
+    table.add_column("Steps", justify="right", style="bright_yellow")
+    
     for entry in data_sorted:
-        walk_id = entry.get("id", "-")
-        date = entry.get("date", "-")
-        distance = entry.get("distance", 0)
-        print(f"{walk_id:<6} {date:<12} {distance:>14.2f}")
+        table.add_row(
+            str(entry.get("id", "-")),
+            entry.get("date", "-"),
+            f"{entry.get('distance', 0):.2f}",
+            f"{entry.get('steps', 0):,}"
+        )
+    
+    console = Console()
+    console.print(table)
