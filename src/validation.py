@@ -13,7 +13,7 @@ def validate_date(date_str: str) -> str | None:
 
 def parse_positive_int(value_str: str) -> int | None:
     try:
-        v = int(value_str.strip())
+        v = int(value_str)
         return v if v > 0 else None
     except ValueError:
         return None

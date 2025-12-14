@@ -1,72 +1,83 @@
 import pandas as pd
 from data import load_data
+from rich.console import Console
+from rich.table import Table
 
-def show_totals(): # Function that shows total stats
+console = Console()
+
+def show_totals(): # Function that shows total stats, formatted in a Rich table
     data = load_data()
     if not data:
         print("No data available.")
         return
     df = pd.DataFrame(data)
     
-    print("\n---------- Total Stats ----------")
-    print(f"Total walks: {len(df)}")
-    print(f"Total steps: {df['steps'].sum():.0f}")
-    print(f"Total distance (in km): {df['distance'].sum():.2f}")
-    print(f"Total time (in minutes): {df['time'].sum():.2f}")
-    print(f"Total elevation gain (in meters): {df['elev_gain'].sum():.2f}")
-    
-    temp_counts = df['temperature'].value_counts() # Get sums of walks in each temperature
-    weather_counts = df['weather'].value_counts() # Get sums of walks in each weather
-    time_counts = df['time_of_day'].value_counts() # Get sums of walks in each time of day
+    table = Table(title="Total Stats", show_lines=True)
+    table.add_column("Metric", style="bright_magenta")
+    table.add_column("Value", justify="right", style="bright_yellow")
 
-    print(f"Total hot walks: {temp_counts.get('hot', 0)}")
-    print(f"Total warm walks: {temp_counts.get('warm', 0)}")
-    print(f"Total cold walks: {temp_counts.get('cold', 0)}")
+    table.add_row("Total walks", f"{len(df)}")
+    table.add_row("Total steps", f"{df['steps'].sum():.0f}")
+    table.add_row("Total distance (km)", f"{df['distance'].sum():.2f}")
+    table.add_row("Total time (mins)", f"{df['time'].sum():.2f}")
+    table.add_row("Total elevation gain (m)", f"{df['elev_gain'].sum():.2f}")
 
-    print(f"Total sunny walks: {weather_counts.get('sunny', 0)}")
-    print(f"Total rainy walks: {weather_counts.get('raining', 0)}")
-    print(f"Total snowy walks: {weather_counts.get('snowing', 0)}")
-    print(f"Total cloudy walks: {weather_counts.get('cloudy', 0)}")
-    print(f"Total windy walks: {weather_counts.get('windy', 0)}")
+    temp_counts = df['temperature'].value_counts() # Count the amount of times each temperature appears
+    weather_counts = df['weather'].value_counts() # Count the amount of times each weather appears
+    time_counts = df['time_of_day'].value_counts() # Count the amount of times each time of day appears
 
-    print(f"Total morning walks: {time_counts.get('morning', 0)}")
-    print(f"Total afternoon walks: {time_counts.get('afternoon', 0)}")
-    print(f"Total evening walks: {time_counts.get('evening', 0)}")
-    print(f"Total night walks: {time_counts.get('night', 0)}")
+    table.add_row("Total hot walks", f"{temp_counts.get('hot', 0)}")
+    table.add_row("Total warm walks", f"{temp_counts.get('warm', 0)}")
+    table.add_row("Total cold walks", f"{temp_counts.get('cold', 0)}")
+    table.add_row("Total sunny walks", f"{weather_counts.get('sunny', 0)}")
+    table.add_row("Total rainy walks", f"{weather_counts.get('raining', 0)}")
+    table.add_row("Total snowy walks", f"{weather_counts.get('snowing', 0)}")
+    table.add_row("Total cloudy walks", f"{weather_counts.get('cloudy', 0)}")
+    table.add_row("Total windy walks", f"{weather_counts.get('windy', 0)}")
+    table.add_row("Total morning walks", f"{time_counts.get('morning', 0)}")
+    table.add_row("Total afternoon walks", f"{time_counts.get('afternoon', 0)}")
+    table.add_row("Total evening walks", f"{time_counts.get('evening', 0)}")
+    table.add_row("Total night walks", f"{time_counts.get('night', 0)}")
 
-def show_stats(): # Function that shows stats for a specified date
+    console.print(table)
+
+def show_stats(): # Function that shows stats for a specified date, formatted in a Rich table
     data = load_data()
     if not data:
         print("No data available.")
         return
-    date = input("Enter the date to view stats for [YYYY-MM-DD]: ").strip() # Get date from user
+    date = input("Enter the date to view stats for [YYYY-MM-DD]: ").strip()
     df = pd.DataFrame(data)
-    day_stats = df[df['date'] == date] # Get the stats for the date
+    day_stats = df[df['date'] == date]
     
     if day_stats.empty:
         print(f"No data found for {date}.")
     else:
-        for i, row in day_stats.iterrows(): # For each walk on the date
-            print(f"\n---------- Stats for {date}: ----------")
-            print(f"\nWalk #{i + 1}:")
-            print(f"    Steps: {row['steps']:.0f}")
-            print(f"    Distance (in km): {row['distance']:.2f}")
-            print(f"    Time (in minutes): {row['time']:.2f}")
-            print(f"    Elevation gain (in meters): {row['elev_gain']:.2f}")
-            print(f"    Temperature: {row['temperature']}")
-            print(f"    Weather: {row['weather']}")
-            print(f"    Time of day: {row['time_of_day']}")
-            print(f"    Average heart rate (bpm): {row['heart_rate']:.2f}")
-            print(f"    Pace (min/km): {row['pace']:.2f}")
-            print(f"    Step length (m): {row['step_len']:.2f}")
+        for i, row in day_stats.iterrows():
+            table = Table(title=f"Stats for {date} - Walk #{i + 1}", show_lines=True)
+            table.add_column("Metric", style="bright_magenta")
+            table.add_column("Value", justify="right", style="bright_yellow")
 
-def show_averages(): # Function that shows the average stats across a date range or all time
+            table.add_row("Steps", f"{row['steps']:.0f}")
+            table.add_row("Distance (km)", f"{row['distance']:.2f}")
+            table.add_row("Time (mins)", f"{row['time']:.2f}")
+            table.add_row("Elevation gain (m)", f"{row['elev_gain']:.2f}")
+            table.add_row("Temperature", f"{row['temperature']}")
+            table.add_row("Weather", f"{row['weather']}")
+            table.add_row("Time of day", f"{row['time_of_day']}")
+            table.add_row("Average heart rate (bpm)", f"{row['heart_rate']:.2f}")
+            table.add_row("Pace (min/km)", f"{row['pace']:.2f}")
+            table.add_row("Step length (m)", f"{row['step_len']:.2f}")
+
+            console.print(table)
+
+def show_averages(): # Function that shows the average stats across a date range or all time, formatted in a Rich table
     data = load_data()
     if not data:
         print("No data available.")
         return
 
-    print("Enter a date range for averages or leave blank for all time.") # Get start and end dates from user
+    print("Enter a date range for averages or leave blank for all time.")
     start = input("Start date [YYYY-MM-DD] (leave blank for earliest): ").strip()
     end = input("End date [YYYY-MM-DD] (leave blank for latest): ").strip()
 
@@ -74,33 +85,38 @@ def show_averages(): # Function that shows the average stats across a date range
     df['date'] = pd.to_datetime(df['date'])
 
     if start:
-        df = df[df['date'] >= pd.to_datetime(start)] # Set the dataframe to be each walk set after the start date
+        df = df[df['date'] >= pd.to_datetime(start)] # Filter the data to start from the entered start date
     if end:
-        df = df[df['date'] <= pd.to_datetime(end)] # Set the dataframe to be each walk set before the end date
+        df = df[df['date'] <= pd.to_datetime(end)] # Filter the data to end at the entered end date
 
     if df.empty:
         print("No data in the specified date range.")
         return
 
-    print("\n---------- Averages ----------")
-    print(f"Average steps: {df['steps'].mean():.2f}")
-    print(f"Average distance (in km): {df['distance'].mean():.2f}")
-    print(f"Average time (in minutes): {df['time'].mean():.2f}")
-    print(f"Average elevation gain (in meters): {df['elev_gain'].mean():.2f}")
-    print(f"Average heart rate (bpm): {df['heart_rate'].mean():.2f}")
-    print(f"Average pace (min/km): {df['pace'].mean():.2f}")
-    print(f"Average step length (m): {df['step_len'].mean():.2f}")
-    print(f"Most common temperature: {df['temperature'].mode()[0] if not df['temperature'].mode().empty else 'N/A'}")
-    print(f"Most common weather: {df['weather'].mode()[0] if not df['weather'].mode().empty else 'N/A'}")
-    print(f"Most common time of day: {df['time_of_day'].mode()[0] if not df['time_of_day'].mode().empty else 'N/A'}")
+    table = Table(title="Averages", show_lines=True)
+    table.add_column("Metric", style="bright_magenta")
+    table.add_column("Value", justify="right", style="bright_yellow")
 
-def show_comparison(): # Function that compares walk data across two date ranges
+    table.add_row("Average steps", f"{df['steps'].mean():.2f}")
+    table.add_row("Average distance (km)", f"{df['distance'].mean():.2f}")
+    table.add_row("Average time (mins)", f"{df['time'].mean():.2f}")
+    table.add_row("Average elevation gain (m)", f"{df['elev_gain'].mean():.2f}")
+    table.add_row("Average heart rate (bpm)", f"{df['heart_rate'].mean():.2f}")
+    table.add_row("Average pace (min/km)", f"{df['pace'].mean():.2f}")
+    table.add_row("Average step length (m)", f"{df['step_len'].mean():.2f}")
+    table.add_row("Most common temperature", f"{df['temperature'].mode()[0] if not df['temperature'].mode().empty else 'N/A'}")
+    table.add_row("Most common weather", f"{df['weather'].mode()[0] if not df['weather'].mode().empty else 'N/A'}")
+    table.add_row("Most common time of day", f"{df['time_of_day'].mode()[0] if not df['time_of_day'].mode().empty else 'N/A'}")
+
+    console.print(table)
+
+def show_comparison(): # Function that compares walk data across two date ranges, formatted in Rich tables
     data = load_data()
     if not data:
         print("No data available.")
         return
 
-    print("Enter two date ranges to compare.") # Get date ranges from user
+    print("Enter two date ranges to compare.")
     start1 = input("First range start [YYYY-MM-DD] (blank for earliest): ").strip()
     end1 = input("First range end [YYYY-MM-DD] (blank for latest): ").strip()
     start2 = input("Second range start [YYYY-MM-DD] (blank for earliest): ").strip()
@@ -110,48 +126,70 @@ def show_comparison(): # Function that compares walk data across two date ranges
     df['date'] = pd.to_datetime(df['date'])
 
     df1 = df.copy()
-    if start1: # Set df1 to the data within the first date range
-        df1 = df1[df1['date'] >= pd.to_datetime(start1)]
+    if start1:
+        df1 = df1[df1['date'] >= pd.to_datetime(start1)] # Filter the first dataset to start from the entered start date
     if end1:
-        df1 = df1[df1['date'] <= pd.to_datetime(end1)]
+        df1 = df1[df1['date'] <= pd.to_datetime(end1)] # Filter the first dataset to end at the entered end date
 
     df2 = df.copy()
-    if start2: # Set df2 to the data within the second date range
-        df2 = df2[df2['date'] >= pd.to_datetime(start2)]
+    if start2:
+        df2 = df2[df2['date'] >= pd.to_datetime(start2)] # Filter the second dataset to start from the entered start date
     if end2:
-        df2 = df2[df2['date'] <= pd.to_datetime(end2)]
+        df2 = df2[df2['date'] <= pd.to_datetime(end2)] # Filter the second dataset to end at the entered end date
 
     if df1.empty or df2.empty:
         print("No data in one or both ranges.")
         return
 
     stats = ['steps', 'distance', 'time', 'elev_gain', 'heart_rate', 'pace', 'step_len']
-    print("\nStat              | Range 1   | Range 2   | Diff")
-    print("-" * 45)
+
+    table = Table(title="Comparison (Totals)", show_lines=True)
+    table.add_column("Stat", style="bright_magenta")
+    table.add_column("Range 1", justify="right", style="bright_yellow")
+    table.add_column("Range 2", justify="right", style="bright_green")
+    table.add_column("Diff (R1 - R2)", justify="right", style="bright_cyan")
+
     for stat in stats:
         t1 = df1[stat].sum()
         t2 = df2[stat].sum()
         diff = t1 - t2
-        print(f"{stat:<17} {t1:>9.2f} {t2:>9.2f} {diff:>9.2f}")
-    
-    print("\nCategorical Stats:")
-    print(f"\nRange 1 - Most common temperature: {df1['temperature'].mode()[0] if not df1['temperature'].mode().empty else 'N/A'}")
-    print(f"Range 1 - Most common weather: {df1['weather'].mode()[0] if not df1['weather'].mode().empty else 'N/A'}")
-    print(f"Range 1 - Most common time of day: {df1['time_of_day'].mode()[0] if not df1['time_of_day'].mode().empty else 'N/A'}")
-    print(f"\nRange 2 - Most common temperature: {df2['temperature'].mode()[0] if not df2['temperature'].mode().empty else 'N/A'}")
-    print(f"Range 2 - Most common weather: {df2['weather'].mode()[0] if not df2['weather'].mode().empty else 'N/A'}")
-    print(f"Range 2 - Most common time of day: {df2['time_of_day'].mode()[0] if not df2['time_of_day'].mode().empty else 'N/A'}")
-    
-def show_maxes():
+        table.add_row(stat, f"{t1:.2f}", f"{t2:.2f}", f"{diff:.2f}")
+
+    console.print(table)
+
+    table2 = Table(title="Comparison (Categorical Modes)", show_lines=True)
+    table2.add_column("Category", style="bright_magenta")
+    table2.add_column("Range 1", style="bright_yellow")
+    table2.add_column("Range 2", style="bright_green")
+
+    table2.add_row("Temperature",
+                      f"{df1['temperature'].mode()[0] if not df1['temperature'].mode().empty else 'N/A'}",
+                      f"{df2['temperature'].mode()[0] if not df2['temperature'].mode().empty else 'N/A'}")
+    table2.add_row("Weather",
+                      f"{df1['weather'].mode()[0] if not df1['weather'].mode().empty else 'N/A'}",
+                      f"{df2['weather'].mode()[0] if not df2['weather'].mode().empty else 'N/A'}")
+    table2.add_row("Time of day",
+                      f"{df1['time_of_day'].mode()[0] if not df1['time_of_day'].mode().empty else 'N/A'}",
+                      f"{df2['time_of_day'].mode()[0] if not df2['time_of_day'].mode().empty else 'N/A'}")
+
+    console.print(table2)
+
+def show_maxes(): # Function that prints the highest values for eligible stats, formatted in a Rich table
     data = load_data()
     if not data:
         print("No data available.")
         return
     df = pd.DataFrame(data)
-    print("\n---------- Max Stats ----------")
-    print(f"Most steps on a walk: {max(df["steps"])}")
-    print(f"Longest walk (km): {max(df["distance"])}")
-    print(f"Longest walk (minutes): {max(df["time"])}")
-    print(f"Highest elevation gain on a walk (m): {max(df["elev_gain"])}")
-    print(f"Highest average heart rate (bpm): {max(df["heart_rate"])}")
-    print(f"Fastest pace (minutes per km): {min(df["pace"])}")
+
+    table = Table(title="Max Stats", show_lines=True)
+    table.add_column("Metric", style="bright_magenta")
+    table.add_column("Value", justify="right", style="bright_yellow")
+
+    table.add_row("Most steps on a walk", f"{df['steps'].max():.0f}")
+    table.add_row("Longest walk (km)", f"{df['distance'].max():.2f}")
+    table.add_row("Longest walk (minutes)", f"{df['time'].max():.2f}")
+    table.add_row("Highest elevation gain (m)", f"{df['elev_gain'].max():.2f}")
+    table.add_row("Highest average heart rate (bpm)", f"{df['heart_rate'].max():.2f}")
+    table.add_row("Fastest pace (min/km)", f"{df['pace'].min():.2f}")
+
+    console.print(table)

@@ -8,7 +8,8 @@ from validation import validate_choice
 
 console = Console()
 
-def show_cmds():
+def show_cmds(): # Function that returns a list of all commands, formatted in a Rich table
+    
     table = Table(title="Command List", show_lines=True)
     table.add_column("Command", style="bright_cyan", no_wrap=True)
     table.add_column("Category", style="bright_green")
@@ -19,12 +20,14 @@ def show_cmds():
 
     console.print(table)
     
-def show_category_cmds():
+def show_category_cmds(): # Function that prints a list of commands from a chosen category, formatted in a Rich table
+    
     chosen_category = str(input(f"Enter the category to display the commands for: {CATEGORIES} "))
-    chosen_category = validate_choice(chosen_category, CATEGORIES)
+    chosen_category = validate_choice(chosen_category, CATEGORIES) # Validating the inputted category against valid categories
     if chosen_category == None:
         print(f"Invalid category. Please retry and choose from {CATEGORIES} ")
         return
+    
     table = Table(title=f"{chosen_category.capitalize()} Command List", show_lines=True)
     table.add_column("Command", style="bright_cyan", no_wrap=True)
     table.add_column("Description", style="bright_yellow")
@@ -35,33 +38,32 @@ def show_category_cmds():
 
     console.print(table)
 
-commands = {
+commands = { # List of commands, along with their description, category and attacthed function
         "add": ("Add an entry", "data", add_entry),
         "delete": ("Delete an entry", "data", delete_entry),
         "edit": ("Edit an entry", "data", edit_entry),
         "show": ("Show a walk by its ID", "data", walk_by_id),
-        "list": ("Show a list of all walks and their IDs", "data", walks_by_id),
-        "total stats": ("Show your total stats", "stats", show_totals),
-        "date stats": ("Show your stats from a specific day", "stats", show_stats),
-        "average stats": ("Show your averages across a timeframe", "stats", show_averages),
-        "compare stats": ("Show a comparison between stats", "stats", show_comparison),
-        "plot stat": ("Plot a trend of a specified stat", "stats", plot_trend),
-        "max stats": ("Show your max stats", "stats", show_maxes),
-        "cmds": ("Help", "misc", show_cmds),
-        "category cmds": ("SHow all commands belonging to a specific category", "misc", show_category_cmds),
-        "quit": ("Quit", "misc", None)
+        "list": ("Show a list of all your walks and their IDs", "data", walks_by_id),
+        "total stats": ("Show your total walk stats", "stats", show_totals),
+        "date stats": ("Show the walk stats from a specific day", "stats", show_stats),
+        "average stats": ("Show your average walk stats across a timeframe", "stats", show_averages),
+        "compare stats": ("Show the comparison between walk stats across two different timeframes", "stats", show_comparison),
+        "plot stat": ("Plot a trend of a specified walk stat", "stats", plot_trend),
+        "max stats": ("Show your max walk stats", "stats", show_maxes),
+        "cmds": ("Show a list of all available commands", "misc", show_cmds),
+        "category cmds": ("Show all commands belonging to a specific category", "misc", show_category_cmds),
+        "quit": ("Quit :[", "misc", None)
     }
     
 def main():
-    
+    console.print("[green]Hi! Welcome to walk tracker :] [/green]")
+    console.print("Type [bold]cmds[/bold] to see a list of all commands and get started.")
     while True:
-        
         choice = input("> ").strip()
         
         if choice not in commands:
-            print("[red]Invalid choice. Please try again.[/red]")
+            console.print("[red]Invalid choice. Please try again.[/red]")
             continue
-        
         if choice == "quit":
             print("Bye!")
             break
