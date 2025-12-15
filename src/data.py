@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 from pathlib import Path
 
 DATA_PATH = Path("data/walks.json")
@@ -25,3 +26,9 @@ def load_data(): # Function for reading data from walks.json
 def save_data(data): # Function for writing data to walks.json
     with open(DATA_PATH, "w") as file:
         json.dump(data, file, indent = 2) # Writing the data, with an indent of 2 for readability
+        
+def export_csv(): # Function that exports walk data as a csv
+    data = load_data
+    df = pd.DataFrame(data)
+    df.to_csv('walks.csv', encoding='utf-8', index=False)
+    print("Data exported as walks.csv")
