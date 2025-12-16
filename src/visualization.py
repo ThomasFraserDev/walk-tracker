@@ -73,7 +73,7 @@ def monthly_steps(): # Function that plots a bar chart of total steps walked mon
           .sum()
           .reset_index()
     )
-    monthly['month_label'] = monthly['date'].dt.strftime('%Y-%m-%d')
+    monthly['month_label'] = monthly['date'].dt.strftime('%Y-%m')
 
     plt.figure(figsize=(10, 6))
     plt.bar(monthly['month_label'], monthly['steps'], color='skyblue')
@@ -103,7 +103,7 @@ def weekly_distance(): # Function that plots a bar chart of total distance walke
     weekly['week_label'] = weekly['date'].dt.strftime('%Y-%m-%d')
 
     plt.figure(figsize=(10, 6))
-    plt.bar(weekly['week_label'], weekly['steps'], color='skyblue')
+    plt.bar(weekly['week_label'], weekly['distance'], color='skyblue')
     plt.xlabel('Week (beginning Monday)')
     plt.ylabel('Distance (km)')
     plt.title('Weekly Distance')
