@@ -7,7 +7,7 @@
 [![Rich](https://img.shields.io/badge/Rich-00AA00?style=for-the-badge&logoColor=white)](https://rich.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](./LICENSE)
 
-A Python CLI tool for tracking, analyzing, and visualizing your data from walks/runs. The tool allows you to log your data via the CLI, then use various commands to view roundups or graphs of your stats.
+A Python CLI tool for tracking, analysing, and visualising your data from walks/runs. The tool allows you to log your data via the CLI, then use various commands to view roundups or graphs of your stats.
 
 ## 📊 Features
 
@@ -24,7 +24,7 @@ A Python CLI tool for tracking, analyzing, and visualizing your data from walks/
 |----------|----------|
 | **Data** | `add`, `delete`, `edit`, `show`, `list`, `export csv` |
 | **Stats** | `total stats`, `average stats`, `max stats`, `date stats`, `compare stats` |
-| **Visualization** | `plot trend`, `weekly steps`, `monthly steps`, `weekly distance`, `monthly distance` |
+| **Visualisation** | `plot trend`, `weekly steps`, `monthly steps`, `weekly distance`, `monthly distance` |
 | **Misc** | `cmds`, `category cmds`, `quit` |
 
 Type `cmds` when running to see all available commands and their descriptions.
@@ -48,7 +48,7 @@ python src/main.py
 ## 📦 Dependencies
 
 - **pandas**: Data manipulation and analysis
-- **matplotlib**: Data visualization
+- **matplotlib**: Data visualisation
 - **scikit-learn**: Machine learning models
 - **rich**: Beautiful terminal output
 
