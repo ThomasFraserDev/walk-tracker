@@ -9,7 +9,7 @@
 
 A Python CLI tool for tracking, analysing, and visualising your data from walks/runs. The tool allows you to log your data via the CLI, then use various commands to view roundups or graphs of your stats.
 
-## 📊 Features
+## Features
 
 - **Walk Tracking**: Log walks with steps, distance, elevation, heart rate, temperature, time of day and weather conditions. Average pace and step distance are then calculated
 - **Heart Rate Prediction**: If unknown, estimate heart rate based on walk characteristics using linear regression
@@ -18,7 +18,7 @@ A Python CLI tool for tracking, analysing, and visualising your data from walks/
 - **Data Management**: Add, edit, delete, and export walk data to CSV
 - **Interactive CLI**: User-friendly command interface with searchable command list
 
-## 📋 Available Commands
+## Available Commands
 
 | Category | Commands |
 |----------|----------|
@@ -29,7 +29,7 @@ A Python CLI tool for tracking, analysing, and visualising your data from walks/
 
 Type `cmds` when running to see all available commands and their descriptions.
 
-## 🧰 How To Run
+## How To Run
 
 ### Prerequisites
 
@@ -45,13 +45,13 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
-## 📦 Dependencies
+## Dependencies
 
 - **pandas**: Data manipulation and analysis
 - **matplotlib**: Data visualisation
 - **scikit-learn**: Machine learning models
 - **rich**: Beautiful terminal output
 
-## 🪙 License
+## License
 
 This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
