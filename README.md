@@ -58,13 +58,7 @@ Contributions are welcome! :]
 
 If you’d like to help improve this walk tracker, please follow these steps:
 1. Fork the repository and create a new branch from main.
-2. For UI changes, screenshots or short clips are encouraged.
-3. Make sure the project runs locally:
-```bash
-npm install
-npm run dev
-```
-4. Open a Pull Request with:
+2. Open a Pull Request with:
 - A clear description of what you changed or added 
 - The reasoning behind it
 
